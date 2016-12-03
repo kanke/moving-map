@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Get started with MapView - Create a 2D map</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.1/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.1/"></script>
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="viewDiv"></div>
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/Graphic",
+      "esri/views/MapView",
+      "esri/geometry/Point",
+      "esri/symbols/SimpleMarkerSymbol",
+      "dojo/domReady!"
+    ], function(Map, Graphic, MapView, Point, SimpleMarkerSymbol) {
+      var map = new Map({
+        basemap: "streets"
+      });
+
+      var view = new MapView({
+        container: "viewDiv",  // Reference to the DOM node that will contain the view
+        map: map,              // References the map object created in step 3
+        center: [-0.1278990, 51.5032520],
+        zoom: 13,
+      });
+
+      var geometry = new Point({
+        x: -0.1278990,
+        y: 51.5032520,
+      });
+
+      var symbol = new SimpleMarkerSymbol({
+        style: 'square',
+        color: 'blue',
+        size: '8px',
+        outline: {
+          color: [255, 255, 0],
+          width: 3,
+        }
+      });
+
+      var attributes = {
+        title: 'Free Red Bull here! (25 remaining)',
+        content: 'Free Red Bull for the first 25 customers here!',
+      };
+
+      var graphic = new Graphic({
+        symbol: symbol,
+        geometry: geometry,
+        attributes: attributes,
+        popupTemplate: {
+          title: '{title}',
+          content: '{content}'
+        }
+      });
+
+      view.graphics.add(graphic);
+
+      function tick() {
+        graphic.geometry.x = graphic.geometry.x + Math.random() / 100.0;
+
+        view.graphics.remove(graphic);
+        graphic = new Graphic({
+          symbol: symbol,
+          geometry: geometry,
+          attributes: attributes,
+          popupTemplate: {
+            title: '{title}',
+            content: '{content}'
+          }
+        });
+        view.graphics.add(graphic);
+
+        setTimeout(tick, 1000);
+      }
+
+      tick();
+    });
+  </script>
+</body>
+</html>
