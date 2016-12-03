@@ -38,6 +38,20 @@ of those sections to manage the look and feel of the site. */
     background: #fff;
 }
 
+#marker {
+    background-image: url('https://www.mapbox.com/mapbox-gl-js/assets/washington-monument.jpg');
+    background-size: cover;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.mapboxgl-popup {
+    max-width: 200px;
+}
+  
+
 .about-section {
     height: 100%;
     padding-top: 150px;
