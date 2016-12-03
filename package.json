@@ -1,0 +1,23 @@
+{
+  "name": "moving-map",
+  "version": "1.0.0",
+  "description": "Hackathon - Techcrunch Disrupt 2016 - London",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kanke/moving-map.git"
+  },
+  "author": "Team iComic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kanke/moving-map/issues"
+  },
+  "homepage": "https://github.com/kanke/moving-map#readme"
+}
