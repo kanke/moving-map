@@ -1,0 +1,25 @@
+<html>
+
+<head>
+
+  <title> Pubnub Demo </title>
+  <meta charset="utf-8"/>
+  <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.3.2.min.js" type="text/javascript"></script>
+  <script src="pubnub.js" type="text/javascript"></script>
+</head>
+
+<body>
+<button onClick="didClickButton()">Publish</button>
+<script type="text/javascript">
+
+  tracker = new LocationTracker();
+  tracker.setListener(function(latitude, longitude) {
+    console.log('location = ' + latitude + ", " + longitude);
+  });
+
+  function didClickButton() {
+    tracker.publishLocation(1.0001, 1.123);
+  };
+</script>
+</body>
+</html>
