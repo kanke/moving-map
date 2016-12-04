@@ -15,15 +15,17 @@ define([
     },
   });
 
-  function Smap(divId) {
-    this._map = new Map({ basemap: 'streets' });
+  function Smap(options) {
+    this._map = new Map({ basemap: 'dark-gray-vector' });
 
     this._view = new MapView({
-      container: divId,
+      container: options.elementId,
       map: this._map,
-      center: [-0.1278990, 51.5032520],
+      center: [options.longitude, options.latitude],
       zoom: 13,
     });
+
+    this._view.on('click', console.log);
 
     this._avatars = {};
   }
