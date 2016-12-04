@@ -7,7 +7,7 @@ require([
   var LOCATIONS_CHANNEL = 'smap-locations';
   var geolocation = navigator.geolocation;
   var locationParams = {
-    timeout: 5000,
+    timeout: 60000,
     enableHighAccuracy: true,
     maximumAge: 0,
   };

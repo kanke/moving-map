@@ -31,7 +31,7 @@ define([
 
   Smap.prototype.zoomTo = function zoomTo(latitude, longitude, zoom) {
     this._view.goTo({
-      zoom: 15,
+      zoom: 17,
       center: [longitude, latitude],
     });
   };
