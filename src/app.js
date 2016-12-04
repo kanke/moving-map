@@ -44,7 +44,25 @@ require([
   });
 
   window.onClickClaim = function onClickClaim(message) {
-    alert('You have claimed "' + message + '" (to be sent via Twilio)');
+    var number = prompt('You are attempting to claim "' + message + '", please enter your number below to complete the claim.', '');
+
+    if (number) {
+      $.ajax({
+        method: 'POST',
+        url: 'https://api.twilio.com/2010-04-01/Accounts/AC64b5b0dea55174050b753bf863341069/Messages.json',
+        data: {
+          From: '+441471392007',
+          To: number,
+          Body: 'Your claim for "' + message + '" has been successful. Your confirmation number is SMAP-' + Math.round(1e5*Math.random()),
+        },
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader ('Authorization', 'Basic ' + btoa('AC64b5b0dea55174050b753bf863341069:4249da0b42dcb376db8e25e7724263d2'));
+        },
+        success: function () {
+          console.log('SUCCESS', arguments);
+        },
+      });
+    }
   };
 
   pubnub.subscribe({
