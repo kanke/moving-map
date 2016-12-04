@@ -3,6 +3,7 @@ require([
   'dojo/domReady!',
 ], function (Smap) {
   var POLL_WAIT = 5000;
+  var PINS_CHANNEL = 'smap-pins';
   var LOCATIONS_CHANNEL = 'smap-locations';
   var geolocation = navigator.geolocation;
 
@@ -19,8 +20,31 @@ require([
     subscribeKey: 'sub-c-0fbe3c62-b988-11e6-9dca-02ee2ddab7fe'
   });
 
+  smap.onClick(function (event) {
+    if (event.target.tagName !== 'svg') {
+      return;
+    }
+
+    var point = event.mapPoint;
+    var message = {
+      title: 'Free beers here!',
+      content: 'Free beers courtesy of KK. Click <a href="javascript:void(0)" onclick="onClickClaim(\'free beers\')">here</a> to claim them now!',
+      latitude: point.latitude,
+      longitude: point.longitude,
+    };
+
+    pubnub.publish({
+      channel: PINS_CHANNEL,
+      message: message,
+    });
+  });
+
+  window.onClickClaim = function onClickClaim(message) {
+    alert('You have claimed "' + message + '" (to be sent via Twilio)');
+  };
+
   pubnub.subscribe({
-    channels: [LOCATIONS_CHANNEL],
+    channels: [LOCATIONS_CHANNEL, PINS_CHANNEL],
     withPresence: true,
   });
 
@@ -29,6 +53,10 @@ require([
       switch (message.channel) {
         case LOCATIONS_CHANNEL:
           smap.createOrUpdateAvatar(message.publisher, message.message);
+          break;
+
+        case PINS_CHANNEL:
+          smap.createPin(message.message);
           break;
 
         default:

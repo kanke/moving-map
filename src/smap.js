@@ -10,6 +10,11 @@ define([
     width: '24px',
     height: '24px',
   });
+  var PIN_SYMBOL = new PictureMarkerSymbol({
+    url: './assets/location-pin.png',
+    width: '24px',
+    height: '24px',
+  });
 
   function Smap(elementId) {
     this._map = new Map({ basemap: 'dark-gray-vector' });
@@ -21,8 +26,6 @@ define([
       zoom: 13,
     });
 
-    this._view.on('click', console.log);
-
     this._avatars = {};
   }
 
@@ -31,6 +34,10 @@ define([
       zoom: 15,
       center: [longitude, latitude],
     });
+  };
+
+  Smap.prototype.onClick = function onClick(callback) {
+    return this._view.on('click', callback);
   };
 
   Smap.prototype.createOrUpdateAvatar = function createOrUpdateAvatar(uuid, coords) {
@@ -52,6 +59,20 @@ define([
     this._view.graphics.add(newGraphic);
 
     this._avatars[uuid] = newGraphic;
+  };
+
+  Smap.prototype.createPin = function createPin(options) {
+    this._view.graphics.add(new Graphic({
+      symbol: PIN_SYMBOL,
+      geometry: new Point({
+        x: options.longitude,
+        y: options.latitude,
+      }),
+      popupTemplate: {
+        title: options.title,
+        content: options.content,
+      },
+    }));
   };
 
   return Smap;
