@@ -2,7 +2,7 @@ require([
   './src/smap.js',
   'dojo/domReady!',
 ], function (Smap) {
-  var POLL_WAIT = 5000;
+  var POLL_WAIT = 2000;
   var PINS_CHANNEL = 'smap-pins';
   var LOCATIONS_CHANNEL = 'smap-locations';
   var geolocation = navigator.geolocation;
