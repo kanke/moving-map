@@ -1,68 +1,59 @@
 require([
-  'esri/Map',
-  'esri/Graphic',
-  'esri/views/MapView',
-  'esri/geometry/Point',
-  'esri/symbols/SimpleMarkerSymbol',
+  '/src/smap.js',
   'dojo/domReady!',
-], function (Map, Graphic, MapView, Point, SimpleMarkerSymbol) {
-  var map = new Map({ basemap: 'streets' });
+], function (Smap) {
+  var POLL_WAIT = 5000;
+  var LOCATIONS_CHANNEL = 'smap-locations';
+  var smap = new Smap('root');
 
-  var view = new MapView({
-    container: 'root',
-    map: map,
-    center: [-0.1278990, 51.5032520],
-    zoom: 13,
+  var pubnub = new PubNub({
+    publishKey: 'pub-c-e8c0a553-dc6e-4f7d-87b5-71872684b051',
+    subscribeKey: 'sub-c-0fbe3c62-b988-11e6-9dca-02ee2ddab7fe'
   });
 
-  var geometry = new Point({
-    x: -0.1278990,
-    y: 51.5032520,
+  pubnub.subscribe({
+    channels: [LOCATIONS_CHANNEL],
+    withPresence: true,
   });
 
-  var symbol = new SimpleMarkerSymbol({
-    style: 'square',
-    color: 'blue',
-    size: '8px',
-    outline: {
-      color: [255, 255, 0],
-      width: 1,
+  pubnub.addListener({
+    message: function (message) {
+      switch (message.channel) {
+        case LOCATIONS_CHANNEL:
+          smap.createOrUpdateAvatar(message.publisher, message.message);
+          break;
+
+        default:
+          console.warn('Unhandled message', message);
+          break;
+      }
+    },
+
+    presence: function (event) {
+      console.log(event);
     },
   });
 
-  var attributes = {
-    title: 'Free Red Bull here! (25 remaining)',
-    content: 'Free Red Bull for the first 25 customers here',
-  };
+  var geolocation = navigator.geolocation;
+  function ping() {
+    geolocation.getCurrentPosition(function (position) {
+      console.log('publish');
+      pubnub.publish({
+        channel: LOCATIONS_CHANNEL,
+        message: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        },
+        error: console.error,
+      });
 
-  var graphic = new Graphic({
-    symbol: symbol,
-    geometry: geometry,
-    attributes: attributes,
-    popupTemplate: {
-      title: '{title}',
-      content: '{content}',
-    }
-  });
-
-  view.graphics.add(graphic);
-  function tick() {
-    graphic.geometry.x = graphic.geometry.x + Math.random() / 100.0;
-
-    view.graphics.remove(graphic);
-    graphic = new Graphic({
-      symbol: symbol,
-      geometry: geometry,
-      attributes: attributes,
-      popupTemplate: {
-        title: '{title}',
-        content: '{content}'
-      }
+      setTimeout(ping, POLL_WAIT);
     });
-    view.graphics.add(graphic);
-
-    setTimeout(tick, 1000);
   }
 
-  tick();
+  if (geolocation) {
+    ping();
+  } else {
+    console.error('The geolocation API is not supported by this browser');
+  }
 });
