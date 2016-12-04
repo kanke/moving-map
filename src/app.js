@@ -6,6 +6,11 @@ require([
   var PINS_CHANNEL = 'smap-pins';
   var LOCATIONS_CHANNEL = 'smap-locations';
   var geolocation = navigator.geolocation;
+  var locationParams = {
+    timeout: 5000,
+    enableHighAccuracy: true,
+    maximumAge: Infinity,
+  };
 
   var smap = new Smap('root');
   geolocation.getCurrentPosition(function (initialPosition) {
@@ -13,7 +18,7 @@ require([
       initialPosition.coords.latitude,
       initialPosition.coords.longitude
     );
-  }, console.error);
+  }, console.error, locationParams);
 
   var pubnub = new PubNub({
     publishKey: 'pub-c-e8c0a553-dc6e-4f7d-87b5-71872684b051',
@@ -104,7 +109,7 @@ require([
       });
 
       setTimeout(ping, POLL_WAIT);
-    });
+    }, console.error, locationParams);
   }
 
   if (geolocation) {
