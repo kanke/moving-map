@@ -9,7 +9,7 @@ require([
   var locationParams = {
     timeout: 5000,
     enableHighAccuracy: true,
-    maximumAge: Infinity,
+    maximumAge: 0,
   };
 
   var smap = new Smap('root');
