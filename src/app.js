@@ -25,18 +25,22 @@ require([
       return;
     }
 
-    var point = event.mapPoint;
-    var message = {
-      title: 'Free beers here!',
-      content: 'Free beers courtesy of KK. Click <a href="javascript:void(0)" onclick="onClickClaim(\'free beers\')">here</a> to claim them now!',
-      latitude: point.latitude,
-      longitude: point.longitude,
-    };
+    var title = prompt('Enter the name of your promo', 'Free beers');
 
-    pubnub.publish({
-      channel: PINS_CHANNEL,
-      message: message,
-    });
+    if (title) {
+      var point = event.mapPoint;
+      var message = {
+        title: title,
+        content: 'Click <a href="javascript:void(0)" onclick="onClickClaim(\'' + title + '\')">here</a> to claim them now!',
+        latitude: point.latitude,
+        longitude: point.longitude,
+      };
+
+      pubnub.publish({
+        channel: PINS_CHANNEL,
+        message: message,
+      });
+    }
   });
 
   window.onClickClaim = function onClickClaim(message) {
