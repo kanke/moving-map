@@ -3,25 +3,21 @@ define([
   'esri/Graphic',
   'esri/views/MapView',
   'esri/geometry/Point',
-  'esri/symbols/SimpleMarkerSymbol',
-], function (Map, Graphic, MapView, Point, SimpleMarkerSymbol) {
-  var AVATAR_SYMBOL = new SimpleMarkerSymbol({
-    style: 'square',
-    color: 'blue',
-    size: '8px',
-    outline: {
-      color: [255, 255, 0],
-      width: 1,
-    },
+  'esri/symbols/PictureMarkerSymbol',
+], function (Map, Graphic, MapView, Point, PictureMarkerSymbol) {
+  var AVATAR_SYMBOL = new PictureMarkerSymbol({
+    url: './assets/avatar-pin.png',
+    width: '24px',
+    height: '24px',
   });
 
-  function Smap(options) {
+  function Smap(elementId) {
     this._map = new Map({ basemap: 'dark-gray-vector' });
 
     this._view = new MapView({
-      container: options.elementId,
+      container: elementId,
       map: this._map,
-      center: [options.longitude, options.latitude],
+      center: [-0.1278990, 51.5032520],
       zoom: 13,
     });
 
@@ -29,6 +25,13 @@ define([
 
     this._avatars = {};
   }
+
+  Smap.prototype.zoomTo = function zoomTo(latitude, longitude, zoom) {
+    this._view.goTo({
+      zoom: 15,
+      center: [longitude, latitude],
+    });
+  };
 
   Smap.prototype.createOrUpdateAvatar = function createOrUpdateAvatar(uuid, coords) {
     console.log('ping', uuid, coords);
