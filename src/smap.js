@@ -22,8 +22,8 @@ define([
     this._view = new MapView({
       container: elementId,
       map: this._map,
-      center: [-0.1278990, 51.5032520],
-      zoom: 13,
+      center: [-0.019931900000000002, 51.544377999999995],
+      zoom: 17,
     });
 
     this._avatars = {};
