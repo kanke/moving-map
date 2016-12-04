@@ -1,5 +1,5 @@
 require([
-  '/src/smap.js',
+  './src/smap.js',
   'dojo/domReady!',
 ], function (Smap) {
   var POLL_WAIT = 5000;
